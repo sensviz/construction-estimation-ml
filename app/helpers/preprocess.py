@@ -3,25 +3,38 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import ColumnTransformer
 import numpy as np
 
-def preprocess():
+encoder = OneHotEncoder()
+columns_to_encode = ['product', 'material']
+
+def preprocessEncoding():   
     df = pd.read_csv("cost_estimation.csv")
-    label_encoder = OneHotEncoder(sparse=False)
-    print(df.head(8))
-    print(df.columns)
     if df.isnull().values.any():
         raise ValueError("DataFrame contains null values. Please handle the null values before proceeding.")
 
-    transformer = ColumnTransformer([
-    ('tnf1',OneHotEncoder(sparse=False,dtype=np.int32),['material']),
-    ('tnf2',OneHotEncoder(sparse=False),['product'])
-],remainder='passthrough')
+    print(df.columns)
+    encoded_columns = encoder.fit_transform(df[columns_to_encode]).toarray()
+
+# Creating a new DataFrame with the encoded columns
+    encoded_df = pd.DataFrame(encoded_columns, columns=encoder.get_feature_names_out(columns_to_encode))
+    df = df.drop(columns_to_encode , axis = 1)
+    df_encoded = pd.concat([df, encoded_df], axis=1)
+    print(df_encoded.head())
     
-    df_encoded =  transformer.fit_transform(df)
-    print(df_encoded.shape)
-    df2=pd.DataFrame(df_encoded,columns=['concrete hexagon pavors','exterior perforated metal panel','exterior metal penal','exterior glass-fibre reinforced concrete faÃ§ade panels','field paint','meeting room','toilet', 'drawing room', 'living', 'id', 'cost', 'quantity',
-       'area'])
+    return df_encoded
+
+def preprocessDecoding(df):
+    columns = ['id','cost','quantity', 'area']
+    new_df = df[columns]
+    encode_df = df.drop(columns,axis = 1)
+    decoded_columns = encoder.inverse_transform(df[encode_df.columns])
+    df_decoded = pd.DataFrame(decoded_columns, columns=columns_to_encode)
     
-    return df2
+    print(decoded_columns)
+    print(df_decoded)
+    df_decoded = pd.concat([df.drop(encode_df.columns, axis=1), df_decoded], axis=1)
+    print(df_decoded)
+    return df_decoded
+
 
 
 

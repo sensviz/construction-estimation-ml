@@ -1,0 +1,9 @@
+id,material,cost,quantity,area,product
+conc-1,concrete hexagon pavors,500000,10,54000,meeting room
+ex-m1,exterior perforated metal panel,400000,1000,20000,toilet
+ex-m2,exterior metal penal,100000,200,30000,drawing room
+ex-tl1,exterior glass-fibre reinforced concrete façade panels,250000,3400,30000,living
+ex-tl2,exterior glass-fibre reinforced concrete façade panels,35000,5600,50000,meeting room
+pt-1,field paint,64000,1300,12000,toilet
+pt-2,field paint,8000,4000,40000,drawing room
+pt-3,field paint,460000,300,20000,living
