@@ -41,6 +41,6 @@ def train():
                     break
     
     torch.save(model.state_dict(), 'model.pt')
-    y_pred = model(torch.from_numpy(X_test).float())
+    y_pred = model(X_test)
     mse = mean_squared_error(y_test, y_pred.detach().numpy())
     print(f'MSE: {mse}')
