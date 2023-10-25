@@ -2,6 +2,7 @@ from fastapi import APIRouter
 import os
 from helpers.preprocess import preprocess
 from models.train import train
+from models.test import test
 
 router = APIRouter()
 
@@ -22,4 +23,11 @@ async def preprocess_data():
 async def train_model():
     # Add your model training logic here
     train()
+    return {"message": "Model training endpoint"}
+
+
+@router.get("/test")
+async def test_model():
+    # Add your model training logic here
+    test()
     return {"message": "Model training endpoint"}

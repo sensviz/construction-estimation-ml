@@ -39,3 +39,8 @@ def train():
                 if loss.item() > 0.1:
                     print('Overfitting detected. Stopping training.')
                     break
+    
+    torch.save(model.state_dict(), 'model.pt')
+    y_pred = model(torch.from_numpy(X_test).float())
+    mse = mean_squared_error(y_test, y_pred.detach().numpy())
+    print(f'MSE: {mse}')
