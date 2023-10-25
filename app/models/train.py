@@ -5,9 +5,10 @@ from torch.optim import SGD
 from sklearn.model_selection import train_test_split
 import pandas as pd
 
-def train(data):
+def train(data , lr , epoch , variable , split):
      # Split the data into training and testing sets
-    X_train, X_test, y_train, y_test = train_test_split(data.drop('cost', axis=1), data['cost'], test_size=0.2, random_state=42)
+    split = split/100
+    X_train, X_test, y_train, y_test = train_test_split(data.drop(variable, axis=1), data[variable], test_size=split, random_state=42)
     # Convert the data to PyTorch tensors
     X_train = torch.FloatTensor(X_train.values)
     y_train = torch.FloatTensor(y_train.values).view(-1, 1)
@@ -17,7 +18,7 @@ def train(data):
     model = Linear(X_train.shape[1], 1)
     # Define the loss function and optimizer
     criterion = MSELoss()
-    optimizer = SGD(model.parameters(), lr=0.01)
+    optimizer = SGD(model.parameters(), lr=lr)
     # Train the model
     for epoch in range(1000):
         # Forward pass
