@@ -1,12 +1,11 @@
 import torch
 from torch.nn import Linear, MSELoss
+from sklearn.metrics import mean_squared_error
 from torch.optim import SGD
 from sklearn.model_selection import train_test_split
 import pandas as pd
 
-def train():
-    
-    data = pd.read_csv('preprocessed_data.csv')
+def train(data):
      # Split the data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(data.drop('cost', axis=1), data['cost'], test_size=0.2, random_state=42)
     # Convert the data to PyTorch tensors
@@ -37,7 +36,7 @@ def train():
                 y_pred = model(X_test)
                 loss = criterion(y_pred, y_test)
                 if loss.item() > 0.1:
-                    print('Overfitting detected. Stopping training.')
+                    return ('Overfitting detected. Stopping training.')
                     break
     
     torch.save(model.state_dict(), 'model.pt')

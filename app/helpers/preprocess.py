@@ -24,8 +24,8 @@ def preprocess():
 
 
 
-def preprocessEncoding():   
-    df = pd.read_csv("cost_estimation.csv")
+def preprocessEncoding(df):   
+    df = df.drop('id' , axis = 1)
     if df.isnull().values.any():
         raise ValueError("DataFrame contains null values. Please handle the null values before proceeding.")
 
