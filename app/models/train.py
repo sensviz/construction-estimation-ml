@@ -36,7 +36,7 @@ def train(data):
                 y_pred = model(X_test)
                 loss = criterion(y_pred, y_test)
                 if loss.item() > 0.1:
-                    return ('Overfitting detected. Stopping training.')
+                    print('Overfitting detected. Stopping training.')
                     break
     
     torch.save(model.state_dict(), 'model.pt')
