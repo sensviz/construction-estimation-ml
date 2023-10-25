@@ -24,8 +24,9 @@ def preprocess():
 
 
 
-def preprocessEncoding():   
-    df = pd.read_csv("cost_estimation.csv")
+def preprocessEncoding(df):   
+    # df = pd.read_csv("cost_estimation.csv")
+    df = df.drop('id',axis = 1)
     if df.isnull().values.any():
         raise ValueError("DataFrame contains null values. Please handle the null values before proceeding.")
 
@@ -52,3 +53,7 @@ def preprocessDecoding(df):
     df_decoded = pd.concat([df.drop(encode_df.columns, axis=1), df_decoded], axis=1)
     print(df_decoded)
     return df_decoded
+
+
+# a = preprocessEncoding()
+# d = train(a)

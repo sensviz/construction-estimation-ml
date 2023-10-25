@@ -1,7 +1,10 @@
-from fastapi import APIRouter
+from fastapi import APIRouter , File , UploadFile
 import os
-from helpers.preprocess import preprocess
-from models.train import train
+import io
+from fastapi.responses import JSONResponse
+import pandas as pd
+from app.helpers.preprocess import preprocessEncoding
+from app.models.train import train_model
 
 router = APIRouter()
 
@@ -18,8 +21,23 @@ async def preprocess_data():
     preprocess()
     return {"message": "Data processed"}
 
-@router.get("/train")
-async def train_model():
+@router.post("/train")
+async def train_model1(data: UploadFile = File(...)):
     # Add your model training logic here
-    train()
+    print(data)
+    name, extension = os.path.splitext(data.filename)
+    print(extension)
+    print(data)
+    contents = await data.read()
+    contents = io.StringIO(contents.decode('utf-8'))
+    try:
+        df = pd.read_csv(contents)
+        # return JSONResponse(content={"data": df.to_dict(orient="records")}, status_code=200)
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+    print(df)
+    print(extension)
+    preprocessed_df = preprocessEncoding(df)
+    print(preprocessed_df)
+    train_model(preprocessed_df)
     return {"message": "Model training endpoint"}
