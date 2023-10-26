@@ -39,11 +39,20 @@ async def train_model1(lr:str = Form(...) , epochs:str = Form(...) , variable:st
     print(df)
     preprocessed_df = preprocessEncoding(df)
     print(preprocessed_df)
-    train(preprocessed_df , lr , epochs ,variable  , split)
-    return {"message": "Model training endpoint"}
+    a = train(preprocessed_df , lr , epochs ,variable  , split)
+    return a
 
 @router.get("/test")
-async def test_model():
+async def test_model(data: UploadFile = File(...)):
     # Add your model training logic here
-    test()
+    contents = await data.read()
+    contents = io.StringIO(contents.decode('utf-8'))
+    try:
+        df = pd.read_csv(contents)
+        # return JSONResponse(content={"data": df.to_dict(orient="records")}, status_code=200)
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+    print(df)
+    preprocessed_df = preprocessEncoding(df)
+    test(preprocessed_df)
     return {"message": "Model testing endpoint"}

@@ -5,7 +5,7 @@ from torch.optim import SGD
 from sklearn.model_selection import train_test_split
 import pandas as pd
 
-def train(data , lr , epoch , variable , split):
+def train(data , lr , epochn , variable , split):
      # Split the data into training and testing sets
     split = split/100
     X_train, X_test, y_train, y_test = train_test_split(data.drop(variable, axis=1), data[variable], test_size=split, random_state=42)
@@ -20,7 +20,7 @@ def train(data , lr , epoch , variable , split):
     criterion = MSELoss()
     optimizer = SGD(model.parameters(), lr=lr)
     # Train the model
-    for epoch in range(1000):
+    for epoch in range(epochn):
         # Forward pass
         outputs = model(X_train)
         # Compute the loss
@@ -36,11 +36,11 @@ def train(data , lr , epoch , variable , split):
             with torch.no_grad():
                 y_pred = model(X_test)
                 loss = criterion(y_pred, y_test)
-                if loss.item() > 0.1:
-                    print('Overfitting detected. Stopping training.')
-                    break
+                # if loss.item() > 0.1:
+                    # print('Overfitting detected. Stopping training.')
+                    # break
     
     torch.save(model.state_dict(), 'model.pt')
     y_pred = model(X_test)
-    mse = mean_squared_error(y_test, y_pred.detach().numpy())
-    print(f'MSE: {mse}')
+    # mse = mean_squared_error(y_test, y_pred.detach().numpy())
+    return "Model saved"
