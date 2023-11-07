@@ -33,7 +33,7 @@ class LinearRegression(nn.Module):
     x = self.hidden_to_output(x)
     return x
 
-def train(data , lr , epoch , variable , split):
+def train(data  , epoch , variable , split):
     print(data.tail(1))
     print(data.dtypes)
     # Convert non-numeric columns to numeric
@@ -60,7 +60,7 @@ def train(data , lr , epoch , variable , split):
     model = LinearRegression(input_size,50, output_size)
     # Define the loss function and optimizer
     criterion = nn.MSELoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=lr)
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.0000001)
 
     # Training the model
     num_epochs = epoch

@@ -24,12 +24,12 @@ async def preprocess_data():
     return {"message": "Data processed"}
 
 @router.post("/train")
-async def train_model1(lr:str = Form(...) , epochs:str = Form(...) , variable:str = Form(...) , split:str = Form(...) , data: UploadFile = File(...) ):
+async def train_model1( epochs:str = Form(...) , variable:str = Form(...) , split:str = Form(...) , data: UploadFile = File(...) ):
     # Add your model training logic here
-    lr = float(lr)
+    # lr = float(lr)
     epochs = int(epochs)
     split = int(split)
-    print(lr , epochs , variable ,split)
+    print( epochs , variable ,split)
     contents = await data.read()
     contents = io.StringIO(contents.decode('utf-8'))
     try:
@@ -40,9 +40,9 @@ async def train_model1(lr:str = Form(...) , epochs:str = Form(...) , variable:st
     print(df)
     preprocessed_df = preprocessEncoding(df)
     print(preprocessed_df)
-    mse = train(preprocessed_df , lr , epochs ,variable  , split)
+    mse = train(preprocessed_df  , epochs ,variable  , split)
     print(mse)
-    return "model training completed and model saved as model.pth"
+    return "model training completed and model saved as model.pt"
 
 @router.post("/test")
 async def test_model(data: UploadFile = File(...)):
