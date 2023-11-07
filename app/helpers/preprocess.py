@@ -2,17 +2,17 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import LabelEncoder , OneHotEncoder
 encoder = OneHotEncoder()
-columns_to_encode = ['product', 'material']
+columns_to_encode = ['Product' , 'Material Used']
 
 # def label_encode_categorical_values(X):
 #     label = LabelEncoder()
 #     X['id'] = label.fit_transform(X.id.values)
 #     return X
 
-# def one_hot_encoding(X):
-#     one_hot_encoded = pd.get_dummies(X)
-#     X=one_hot_encoded
-#     return X
+def one_hot_encoding(X):
+    one_hot_encoded = pd.get_dummies(X)
+    X=one_hot_encoded
+    return X
 
 # def preprocess(): 
 
@@ -25,7 +25,7 @@ columns_to_encode = ['product', 'material']
 
 
 def preprocessEncoding(df):   
-    df = df.drop('id' , axis = 1)
+    # df = df.drop('id' , axis = 1)
     if df.isnull().values.any():
         raise ValueError("DataFrame contains null values. Please handle the null values before proceeding.")
 
@@ -41,7 +41,7 @@ def preprocessEncoding(df):
     return df_encoded
 
 def preprocessDecoding(df):
-    columns = ['id','cost','quantity', 'area']
+    columns = ['cost','quantity', 'area']
     new_df = df[columns]
     encode_df = df.drop(columns,axis = 1)
     decoded_columns = encoder.inverse_transform(df[encode_df.columns])
