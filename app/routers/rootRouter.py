@@ -2,8 +2,9 @@ from fastapi import APIRouter , File , UploadFile , Form
 import os
 import io
 from fastapi.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder
 import pandas as pd
-from app.helpers.preprocess import preprocessEncoding
+from app.helpers.preprocess import preprocessEncoding , one_hot_encoding
 from app.models.train import   train
 from app.models.test import test
 
@@ -23,12 +24,12 @@ async def preprocess_data():
     return {"message": "Data processed"}
 
 @router.post("/train")
-async def train_model1(lr:str = Form(...) , epochs:str = Form(...) , variable:str = Form(...) , split:str = Form(...) , data: UploadFile = File(...) ):
+async def train_model1( epochs:str = Form(...) , variable:str = Form(...) , split:str = Form(...) , data: UploadFile = File(...) ):
     # Add your model training logic here
-    lr = float(lr)
+    # lr = float(lr)
     epochs = int(epochs)
     split = int(split)
-    print(lr , epochs , variable ,split)
+    print( epochs , variable ,split)
     contents = await data.read()
     contents = io.StringIO(contents.decode('utf-8'))
     try:
@@ -39,10 +40,11 @@ async def train_model1(lr:str = Form(...) , epochs:str = Form(...) , variable:st
     print(df)
     preprocessed_df = preprocessEncoding(df)
     print(preprocessed_df)
-    a = train(preprocessed_df , lr , epochs ,variable  , split)
-    return a
+    mse = train(preprocessed_df  , epochs ,variable  , split)
+    print(mse)
+    return "model training completed and model saved as model.pt"
 
-@router.get("/test")
+@router.post("/test")
 async def test_model(data: UploadFile = File(...)):
     # Add your model training logic here
     contents = await data.read()
@@ -52,7 +54,8 @@ async def test_model(data: UploadFile = File(...)):
         # return JSONResponse(content={"data": df.to_dict(orient="records")}, status_code=200)
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
-    print(df)
     preprocessed_df = preprocessEncoding(df)
-    test(preprocessed_df)
-    return {"message": "Model testing endpoint"}
+    predictions = test(preprocessed_df)
+    list1 = predictions.tolist()
+    print(type(list1))
+    return jsonable_encoder(list1)

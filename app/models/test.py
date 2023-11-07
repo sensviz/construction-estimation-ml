@@ -2,26 +2,26 @@ import torch
 from torch.utils.data import DataLoader
 from torch.nn import Linear, MSELoss
 from sklearn.model_selection import train_test_split
-import pandas
-
+from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error
-# from helpers.preprocess import label_encode_categorical_values,one_hot_encoding
+from app.models.train import LinearRegression
 
 def test(data):
-    
-    # Load the data 
+    print(data.shape)
+    X = data.drop('Cost', axis = 1)
+    y = data['Cost']
+    y = data.values
+    print(X.shape)
+    X = X.values
+    X_tensor = torch.tensor(X, dtype=torch.float32)
+    y_tensor = torch.tensor(y, dtype=torch.float32)
+    # Load the model
+    model = LinearRegression(input_dim=X.shape[1], hidden_dim=50, output_dim=1)  # Make sure to set the correct input and hidden dimensions
 
-    # y_test=data[variable]
-    # X_test =data.drop(variable, axis=1)
+    model.load_state_dict(torch.load("model.pt"))
+    model.eval()
 
-    # Convert the data to PyTorch tensors
-    X_test = torch.FloatTensor(data.values)
-    y_test = torch.FloatTensor(y_test.values)
-    model = Linear(X_test.shape[1], 1)
-    model.load_state_dict(torch.load('model.pt'))
-    # Make predictions
-    y_pred = model(X_test)
-    return y_pred
-    # Evaluate the model
-    # mse = mean_squared_error(y_test, y_pred.detach())
-    # print(f'MSE: {mse}')
+    with torch.no_grad():
+        predictions = model(X_tensor).numpy()
+
+    return predictions
