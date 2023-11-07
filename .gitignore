@@ -1,0 +1,4 @@
+model.pt
+app/__pycache__
+app/helpers/__pycache__
+app/routers/__pycache__
