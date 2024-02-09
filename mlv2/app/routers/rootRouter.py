@@ -15,6 +15,7 @@ router = APIRouter()
 @router.post("/predict")
 async def preprocess_data(data: dict):
     # Add your data preprocessing logic here
+    print(data)
     data1 = data['data']
     date = data['currentdate']
     print(data1)
