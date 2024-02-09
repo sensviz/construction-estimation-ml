@@ -1,8 +1,8 @@
 from datetime import datetime
 
 def process(data , date):
-    latest = data['data'][0]['pricing_history'][0]
-    old = data['data'][0]['pricing_history'][-1]
+    latest = data['productdata'][0]['pricing_history'][0]
+    old = data['productdata'][0]['pricing_history'][-1]
     oldprice = old['old_unit_price']
     olddate = old['updated_at_timestamp']
     latestprice = latest['new_unit_price']
